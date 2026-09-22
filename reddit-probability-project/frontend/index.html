@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reddit Probability Space — A statistical map of 1,013 communities</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0B0E13;
+    --bg-raised: #10141B;
+    --text: #E8E6E1;
+    --text-muted: #868D9B;
+    --hair: #232A35;
+    --accent-indigo: #7C9EFF;
+    --accent-violet: #C88FE0;
+    --accent-teal: #5FD4C4;
+    --accent-amber: #E0A96D;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  .serif {
+    font-family: 'Fraunces', Georgia, serif;
+    font-optical-sizing: auto;
+  }
+
+  /* ---------- Fluid mesh gradient (goo-merged blobs) ---------- */
+  .mesh-wrap {
+    position: fixed;
+    inset: 0;
+    height: 100vh;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .mesh-layer {
+    position: absolute;
+    top: -20%;
+    left: -20%;
+    width: 140%;
+    height: 140%;
+    filter: url(#goo) blur(2px);
+    will-change: transform;
+  }
+
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    will-change: transform;
+  }
+
+  .blob-1 { width: 34vw; height: 34vw; background: var(--accent-indigo); top: 10%; left: 14%; }
+  .blob-2 { width: 30vw; height: 30vw; background: var(--accent-violet); top: 6%; left: 52%; }
+  .blob-3 { width: 26vw; height: 26vw; background: var(--accent-teal); top: 44%; left: 8%; }
+  .blob-4 { width: 22vw; height: 22vw; background: var(--accent-amber); top: 46%; left: 58%; }
+  .blob-5 { width: 20vw; height: 20vw; background: var(--accent-indigo); top: 30%; left: 36%; }
+
+  .mesh-wash {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 20%, rgba(11,14,19,0) 0%, rgba(11,14,19,0.55) 70%, var(--bg) 100%);
+    z-index: 1;
+  }
+
+  .mesh-grain {
+    position: absolute;
+    inset: 0;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    z-index: 2;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+  }
+
+  /* ---------- Nav ---------- */
+  nav {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 8px 8px 20px;
+    background: rgba(16, 20, 27, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--hair);
+    border-radius: 999px;
+    transition: top 0.3s ease, background 0.3s ease;
+  }
+
+  nav.scrolled { top: 12px; background: rgba(16, 20, 27, 0.9); }
+
+  nav .brand {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    margin-right: 12px;
+    white-space: nowrap;
+  }
+
+  nav a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 14px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    transition: color 0.2s ease, background 0.2s ease;
+  }
+
+  nav a:hover, nav a:focus-visible { color: var(--text); background: rgba(255,255,255,0.06); }
+
+  nav a.cta { background: var(--text); color: var(--bg); font-weight: 500; }
+  nav a.cta:hover { background: #fff; }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    position: relative;
+    z-index: 3;
+    min-height: 94vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 140px 24px 80px;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.5rem, 6.4vw, 4.9rem);
+    font-weight: 500;
+    line-height: 1.06;
+    margin: 0 0 22px;
+    max-width: 16ch;
+    letter-spacing: -0.01em;
+  }
+
+  .hero p {
+    max-width: 46ch;
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    margin: 0 0 36px;
+  }
+
+  .hero-actions { display: flex; gap: 14px; align-items: center; }
+
+  .btn-primary {
+    background: var(--text);
+    color: var(--bg);
+    border: none;
+    padding: 14px 26px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: transform 0.15s ease, background 0.2s ease;
+  }
+
+  .btn-primary:hover { background: #fff; transform: translateY(-1px); }
+  .btn-primary:focus-visible { outline: 2px solid var(--accent-indigo); outline-offset: 3px; }
+
+  .btn-secondary {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 15px;
+    padding: 14px 10px;
+    border-bottom: 1px solid transparent;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .btn-secondary:hover { color: var(--text); border-color: var(--hair); }
+
+  .hero-stats {
+    margin-top: 64px;
+    display: flex;
+    gap: 48px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .hero-stat { text-align: center; }
+
+  .hero-stat .num {
+    font-family: 'Fraunces', serif;
+    font-size: 1.9rem;
+    font-weight: 500;
+    display: block;
+  }
+
+  .hero-stat .label { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
+
+  /* ---------- Sections ---------- */
+  .section {
+    position: relative;
+    z-index: 3;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 100px 24px;
+  }
+
+  .section-head { max-width: 60ch; margin-bottom: 20px; }
+
+  .section-head h2 {
+    font-size: clamp(1.7rem, 3vw, 2.3rem);
+    font-weight: 500;
+    margin: 0 0 14px;
+  }
+
+  .section-head p { color: var(--text-muted); font-size: 1rem; margin: 0; }
+
+  /* Feature list — no cards. Hairline-divided rows, icon + text, full width. */
+  .feature-list { margin-top: 40px; }
+
+  .feature-row {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 28px;
+    align-items: start;
+    padding: 36px 0;
+    border-top: 1px solid var(--hair);
+  }
+
+  .feature-row:last-child { border-bottom: 1px solid var(--hair); }
+
+  .feature-icon { width: 30px; height: 30px; color: var(--accent-indigo); }
+  .feature-row:nth-child(2) .feature-icon { color: var(--accent-violet); }
+  .feature-row:nth-child(3) .feature-icon { color: var(--accent-teal); }
+
+  .feature-row h3 {
+    font-size: 1.15rem;
+    font-weight: 500;
+    margin: 0 0 8px;
+    font-family: 'Fraunces', serif;
+  }
+
+  .feature-row p {
+    color: var(--text-muted);
+    font-size: 0.96rem;
+    margin: 0;
+    max-width: 58ch;
+    line-height: 1.7;
+  }
+
+  /* ---------- Method strip ---------- */
+  .method-strip {
+    position: relative;
+    z-index: 3;
+    border-top: 1px solid var(--hair);
+    border-bottom: 1px solid var(--hair);
+    background: var(--bg-raised);
+  }
+
+  .method-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 60px 24px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+  }
+
+  .method-item .val { font-family: 'Fraunces', serif; font-size: 1.5rem; font-weight: 500; color: var(--text); }
+  .method-item .desc { color: var(--text-muted); font-size: 13px; margin-top: 6px; }
+
+  /* ---------- Footer ---------- */
+  footer {
+    position: relative;
+    z-index: 3;
+    padding: 60px 24px 40px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+
+  @media (max-width: 780px) {
+    .method-inner { grid-template-columns: repeat(2, 1fr); }
+    nav .brand { display: none; }
+    .hero-stats { gap: 32px; }
+    .feature-row { grid-template-columns: 40px 1fr; gap: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <filter id="goo">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="26" result="blur" />
+      <feColorMatrix in="blur" mode="matrix"
+        values="1 0 0 0 0
+                0 1 0 0 0
+                0 0 1 0 0
+                0 0 0 22 -9" result="goo" />
+      <feBlend in="SourceGraphic" in2="goo" />
+    </filter>
+  </defs>
+</svg>
+
+<div class="mesh-wrap">
+  <div class="mesh-layer" id="meshLayer">
+    <div class="blob blob-1" data-depth="0.6"></div>
+    <div class="blob blob-2" data-depth="0.9"></div>
+    <div class="blob blob-3" data-depth="0.4"></div>
+    <div class="blob blob-4" data-depth="1.1"></div>
+    <div class="blob blob-5" data-depth="0.7"></div>
+  </div>
+  <div class="mesh-wash"></div>
+  <div class="mesh-grain"></div>
+</div>
+
+<nav id="nav">
+  <span class="brand">reddit / probability</span>
+  <a href="map.html">Map</a>
+  <a href="hopper.html">Hopper</a>
+  <a href="#method">Method</a>
+  <a href="map.html" class="cta">Explore the map</a>
+</nav>
+
+<header class="hero" id="heroContent">
+  <h1 class="serif">A statistical map of 1,013 Reddit communities</h1>
+  <p>Every community plotted by what it actually talks about — clustered, measured for uncertainty, and connected by the probability of drifting from one to the next.</p>
+  <div class="hero-actions">
+    <a href="map.html" class="btn-primary">Explore the map</a>
+    <a href="#method" class="btn-secondary">How it's built</a>
+  </div>
+
+  <div class="hero-stats">
+    <div class="hero-stat"><span class="num serif">1,013</span><span class="label">communities mapped</span></div>
+    <div class="hero-stat"><span class="num serif">45</span><span class="label">emergent clusters</span></div>
+    <div class="hero-stat"><span class="num serif">0.50</span><span class="label">silhouette score</span></div>
+    <div class="hero-stat"><span class="num serif">8,104</span><span class="label">weighted transitions</span></div>
+  </div>
+</header>
+
+<section class="section" id="map">
+  <div class="section-head">
+    <h2 class="serif">Three ways to read the space</h2>
+    <p>Each view answers a different question about how these communities relate — spatially, probabilistically, and by how predictable their language is.</p>
+  </div>
+
+  <div class="feature-list">
+    <div class="feature-row">
+      <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="7" cy="8" r="2.4"/>
+        <circle cx="16" cy="6" r="1.8"/>
+        <circle cx="17" cy="15" r="2.2"/>
+        <circle cx="8" cy="17" r="1.6"/>
+        <path d="M8.8 9.2 L14.5 6.6 M8.6 16 L15.4 15.6 M8 10 L16.4 14.4" stroke-opacity="0.5"/>
+      </svg>
+      <div>
+        <h3>Semantic map</h3>
+        <p>Every subreddit projected into 2D by what it talks about, using UMAP over a term-frequency model of 1,013 communities. Distance on the map reflects distance in language, not popularity.</p>
+      </div>
+    </div>
+    <div class="feature-row">
+      <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M4 18 Q 8 6, 12 12 T 20 6" />
+        <circle cx="4" cy="18" r="1.6" fill="currentColor" stroke="none"/>
+        <circle cx="20" cy="6" r="1.6" fill="currentColor" stroke="none"/>
+      </svg>
+      <div>
+        <h3>Topic hopper</h3>
+        <p>Pick two unrelated communities and trace the highest-probability path between them through a Markov chain built on text similarity — plus which subreddits act as long-run "gravity wells."</p>
+      </div>
+    </div>
+    <div class="feature-row">
+      <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M4 20 L4 4" />
+        <path d="M4 20 L20 20" />
+        <path d="M6 17 L9 11 L12 14 L16 6 L19 9" />
+      </svg>
+      <div>
+        <h3>Entropy explorer</h3>
+        <p>The Shannon entropy of each community's vocabulary — a number for how predictable or chaotic its language is, from tightly scripted niches to wide-ranging discussion.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="method-strip" id="method">
+  <div class="method-inner">
+    <div class="method-item"><div class="val serif">6,000</div><div class="desc">TF-IDF vocabulary terms, min/max document frequency filtered</div></div>
+    <div class="method-item"><div class="val serif">50 / sub</div><div class="desc">posts sampled per community, stratified across all 1,013</div></div>
+    <div class="method-item"><div class="val serif">cosine</div><div class="desc">similarity metric feeding both UMAP and the transition graph</div></div>
+    <div class="method-item"><div class="val serif">top-8</div><div class="desc">neighbors kept per node, softmax-weighted into transition probabilities</div></div>
+  </div>
+</div>
+
+<footer>
+  A probability &amp; statistics project — built on the r/selfposts dataset (1,013 communities, ~1M posts).
+</footer>
+
+<script>
+  const nav = document.getElementById('nav');
+  const blobs = Array.from(document.querySelectorAll('.blob'));
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  let scrollY = 0;
+  let ticking = false;
+  function onScroll() {
+    scrollY = window.scrollY;
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      nav.classList.toggle('scrolled', scrollY > 40);
+      ticking = false;
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  // Ambient organic drift: each blob wanders on a sum-of-sines path with
+  // its own period/phase, so the motion never reads as a single loop.
+  const seeds = blobs.map((_, i) => ({
+    ax: 18 + i * 4,
+    ay: 14 + i * 3,
+    px: 0.00013 + i * 0.00004,
+    py: 0.00011 + i * 0.00005,
+    phaseX: i * 1.7,
+    phaseY: i * 2.3,
+  }));
+
+  // Mouse-reactive parallax: blobs ease toward the cursor, each at a
+  // different depth, so the mesh reads as dimensional, not a flat sticker.
+  let mouseX = 0, mouseY = 0;
+  let curX = 0, curY = 0;
+
+  window.addEventListener('mousemove', (e) => {
+    mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+    mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+  }, { passive: true });
+
+  function animate(t) {
+    if (!reduceMotion) {
+      curX += (mouseX - curX) * 0.04;
+      curY += (mouseY - curY) * 0.04;
+
+      blobs.forEach((blob, i) => {
+        const s = seeds[i];
+        const driftX = Math.sin(t * s.px + s.phaseX) * s.ax;
+        const driftY = Math.cos(t * s.py + s.phaseY) * s.ay;
+        const depth = parseFloat(blob.dataset.depth);
+        const parallaxX = curX * 26 * depth;
+        const parallaxY = curY * 20 * depth;
+        const scrollDrift = scrollY * 0.06 * depth;
+        blob.style.transform =
+          `translate3d(${driftX + parallaxX}px, ${driftY + parallaxY - scrollDrift}px, 0)`;
+      });
+    }
+    requestAnimationFrame(animate);
+  }
+  requestAnimationFrame(animate);
+</script>
+
+</body>
+</html>

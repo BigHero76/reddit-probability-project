@@ -1,0 +1,227 @@
+{
+  "17": {
+    "dominant_category": "tv_show",
+    "purity": 0.95,
+    "size": 59
+  },
+  "24": {
+    "dominant_category": "arts",
+    "purity": 0.29,
+    "size": 17
+  },
+  "9": {
+    "dominant_category": "video_game",
+    "purity": 0.41,
+    "size": 22
+  },
+  "0": {
+    "dominant_category": "autos",
+    "purity": 0.54,
+    "size": 35
+  },
+  "44": {
+    "dominant_category": "video_game",
+    "purity": 1.0,
+    "size": 28
+  },
+  "19": {
+    "dominant_category": "sex/relationships",
+    "purity": 0.53,
+    "size": 40
+  },
+  "43": {
+    "dominant_category": "sex/relationships",
+    "purity": 0.29,
+    "size": 21
+  },
+  "18": {
+    "dominant_category": "appearance",
+    "purity": 0.3,
+    "size": 10
+  },
+  "23": {
+    "dominant_category": "health",
+    "purity": 0.73,
+    "size": 37
+  },
+  "27": {
+    "dominant_category": "education",
+    "purity": 0.35,
+    "size": 26
+  },
+  "15": {
+    "dominant_category": "drugs",
+    "purity": 0.83,
+    "size": 18
+  },
+  "26": {
+    "dominant_category": "electronics",
+    "purity": 0.68,
+    "size": 19
+  },
+  "8": {
+    "dominant_category": "profession",
+    "purity": 0.72,
+    "size": 18
+  },
+  "40": {
+    "dominant_category": "meta",
+    "purity": 0.23,
+    "size": 13
+  },
+  "1": {
+    "dominant_category": "writing/stories",
+    "purity": 0.21,
+    "size": 19
+  },
+  "41": {
+    "dominant_category": "profession",
+    "purity": 0.69,
+    "size": 13
+  },
+  "28": {
+    "dominant_category": "politics/viewpoint",
+    "purity": 0.25,
+    "size": 32
+  },
+  "11": {
+    "dominant_category": "electronics",
+    "purity": 0.53,
+    "size": 19
+  },
+  "14": {
+    "dominant_category": "card_game",
+    "purity": 0.54,
+    "size": 24
+  },
+  "21": {
+    "dominant_category": "video_game",
+    "purity": 0.56,
+    "size": 18
+  },
+  "35": {
+    "dominant_category": "books",
+    "purity": 0.55,
+    "size": 20
+  },
+  "12": {
+    "dominant_category": "animals",
+    "purity": 0.78,
+    "size": 18
+  },
+  "6": {
+    "dominant_category": "health",
+    "purity": 0.63,
+    "size": 27
+  },
+  "5": {
+    "dominant_category": "programming",
+    "purity": 0.55,
+    "size": 31
+  },
+  "3": {
+    "dominant_category": "crypto",
+    "purity": 0.9,
+    "size": 31
+  },
+  "29": {
+    "dominant_category": "food/drink",
+    "purity": 0.45,
+    "size": 22
+  },
+  "25": {
+    "dominant_category": "music",
+    "purity": 0.35,
+    "size": 17
+  },
+  "20": {
+    "dominant_category": "company/website",
+    "purity": 0.42,
+    "size": 26
+  },
+  "31": {
+    "dominant_category": "anime/manga",
+    "purity": 0.89,
+    "size": 18
+  },
+  "36": {
+    "dominant_category": "arts",
+    "purity": 0.5,
+    "size": 14
+  },
+  "2": {
+    "dominant_category": "music",
+    "purity": 0.86,
+    "size": 43
+  },
+  "4": {
+    "dominant_category": "sports",
+    "purity": 0.59,
+    "size": 27
+  },
+  "37": {
+    "dominant_category": "video_game",
+    "purity": 0.77,
+    "size": 30
+  },
+  "38": {
+    "dominant_category": "writing/stories",
+    "purity": 0.3,
+    "size": 20
+  },
+  "22": {
+    "dominant_category": "geo",
+    "purity": 0.73,
+    "size": 22
+  },
+  "10": {
+    "dominant_category": "education",
+    "purity": 0.47,
+    "size": 17
+  },
+  "39": {
+    "dominant_category": "software",
+    "purity": 0.54,
+    "size": 24
+  },
+  "16": {
+    "dominant_category": "movies",
+    "purity": 0.46,
+    "size": 13
+  },
+  "42": {
+    "dominant_category": "travel",
+    "purity": 0.25,
+    "size": 20
+  },
+  "7": {
+    "dominant_category": "tv_show",
+    "purity": 0.38,
+    "size": 13
+  },
+  "30": {
+    "dominant_category": "video_game",
+    "purity": 0.31,
+    "size": 13
+  },
+  "34": {
+    "dominant_category": "sports",
+    "purity": 0.36,
+    "size": 11
+  },
+  "33": {
+    "dominant_category": "video_game",
+    "purity": 0.33,
+    "size": 9
+  },
+  "13": {
+    "dominant_category": "software",
+    "purity": 0.61,
+    "size": 18
+  },
+  "32": {
+    "dominant_category": "sports",
+    "purity": 0.67,
+    "size": 21
+  }
+}
